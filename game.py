@@ -11,7 +11,7 @@ class Card:
         self.value = values[rank]
 
     def __str__(self):
-        return self.rank + 'of ' + self.suit
+        return self.rank + ' of ' + self.suit
 
 class Deck:
     def __init__(self):
@@ -35,10 +35,10 @@ class Player:
 
     def add_card(self, new_card):
         self.hand.append(new_card)
-        print(new_card)
+        print(f"The card you are givin is the {new_card}")
         if new_card.rank == 'Ace':
             while True:
-                card_value = input("You got an ace do you want it's value to be 1 or 11")
+                card_value = input("You got an ace do you want it's value to be 1 or 11? ")
                 if card_value not in ['1', '11']:
                     print("Sorry you didn't input a proper value try again.")
                     continue
@@ -50,10 +50,14 @@ class Player:
                     break   
         else:
             self.handTotal += new_card.value
-        print(f"Your score total is {self.handTotal}")
+        print(f"Your total hand score is {self.handTotal}")
     
     def check_bust(self):
-        return self.handTotal > 21
+        if self.handTotal > 21:
+            print(f"Your total hand score is {self.handTotal} which is over 21 which means your hand is bust.")
+            return True
+        else:
+            return False
 
     def change_money(self, amount):
         self.money += amount
@@ -74,7 +78,7 @@ class Dealer:
 
     def add_card(self, new_card):
         self.hand.append(new_card)
-        print(new_card)
+        print(f"The card givin to the dealer is the {new_card}")
         if new_card.rank == 'Ace':
             if self.handTotal <= 10:
                 self.handTotal += 11
@@ -82,13 +86,17 @@ class Dealer:
                 self.handTotal += 1   
         else:
             self.handTotal += new_card.value
-        print(f"Dealer score total is {self.handTotal}")
+        print(f"Dealer's total hand score is {self.handTotal}")
     
     def add_sec_card(self, new_card):
         self.secHand.append(new_card)
 
     def check_bust(self):
-        return self.handTotal > 21
+        if self.handTotal > 21:
+            print(f"Dealer's total hand score is {self.handTotal} which is over 21 which means their hand is bust.")
+            return True
+        else:
+            return False
 
     def clear_hand(self):
         self.hand.clear()
@@ -98,30 +106,24 @@ class Dealer:
 def ask_bet(money):
     while True:
         try:
-            gameBet = int(input("How much do you want to bet on this round?"))
+            gameBet = int(input("How much do you want to bet on this round? "))
 
             if gameBet > money:
                 print("Sorry you don't have enough money to make that bet. Try again.")
                 continue
+            elif gameBet < 0:
+                print("Sorry you can't make negative bets. Please Try again.")
             else:
                 break
         except:
-            print("Sorry you need to input an integer value")
+            print("Sorry you need to input an integer value.")
     return gameBet
-
-# list of what needs to happen
-# Start the game welcoming player and saying starting balance
-# Make the deck
-# give player two cards and dealer two cards one hidden and one not
-# Ask player if they want to hit or just stay
-# have dealer reveal hidden card then hit till they beat player or bust
-# reveal winner and ask to play again
 
 def play_again():
     while True:
-        response = input("Would you like to play again? Yes or No").lower()
+        response = input("Would you like to play again? Yes or no? ").lower()
         if response not in ['yes', 'no']:
-            print("Sorry you didn't anser yes or no. Please try again.")
+            print("Sorry you didn't answer yes or no. Please try again.")
         else:
             if response == 'yes':
                 return True
@@ -129,31 +131,32 @@ def play_again():
                 return False
 
 def blackjack_game():
-    yourName = input('What is your name?')
+    yourName = input('What is your name? ')
 
     playerOne = Player(yourName, 5000)
     dealer = Dealer()
 
-    print(f'Hello {playerOne.name} your starting balance is ${playerOne.money}')
-
     gameOn = True
     while gameOn:
+        print(f'Hello {playerOne.name} your balance is ${playerOne.money}.')
         gameDeck = Deck()
         gameDeck.shuffle()
 
         bet_amount = ask_bet(playerOne.money)
+        print("Dealing two cards to the player face up.")
         playerOne.add_card(gameDeck.deal_card())
         playerOne.add_card(gameDeck.deal_card())
+        print("Dealing one card to the dealer face up and one card face down.")
         dealer.add_card(gameDeck.deal_card())
         dealer.add_sec_card(gameDeck.deal_card())
         
         playerBust = False
 
+        print(f"Your total hand score is {playerOne.handTotal}")
         while not playerBust:
-            print(f"Your total hand score is {playerOne.handTotal}")
 
-            hit_stay = input("Do you want to hit or stay?").lower()
-            if hit_stay not 'hit' and hit_stay not 'stay':
+            hit_stay = input("Do you want to hit or stay? ").lower()
+            if hit_stay not in ['hit', 'stay']:
                 print("Sorry you didn't enter hit or stay. Please try again.")
                 continue
             if hit_stay == 'stay':
@@ -165,13 +168,14 @@ def blackjack_game():
 
         dealerBust = False
 
+        print(f"Dealer's total hand score is {dealer.handTotal}.")
         while not dealerBust and not playerBust:
-            print(f"Dealers total hand score is {dealer.handTotal}")
             if len(dealer.secHand):
-                print(f"revealing the dealer's secret second card")
+                print("Revealing the dealer's secret second card.")
                 dealer.add_card(dealer.secHand[0])
+                dealer.secHand.clear()
             elif dealer.handTotal < 17:
-                print("Dealer decides to draw another card")
+                print("Dealer decides to draw another card.")
                 dealer.add_card(gameDeck.deal_card())
             else:
                 print(f"Dealer decides to stay.")
@@ -180,16 +184,19 @@ def blackjack_game():
             dealerBust = dealer.check_bust()
 
         if playerBust:
-            print(f"Sorry but you went bust so the dealer wins. You lose ${bet_amount}")
+            print(f"Sorry but you went bust so the dealer wins. You lose ${bet_amount}.")
             playerOne.change_money(-bet_amount)
         elif dealerBust:
-            print(f"Dealer went bust so you win. You gain ${bet_amount}")
+            print(f"Dealer went bust so you win. You win ${bet_amount}.")
             playerOne.change_money(bet_amount)
+        elif playerOne.handTotal == dealer.handTotal:
+            print(f"You and the dealer have equal value hands so the dealer wins. You lose ${bet_amount}.")
+            playerOne.change_money(-bet_amount)
         elif playerOne.handTotal > dealer.handTotal:
-            print(f"Your hand is better than the dealers. You win ${bet_amount}")
+            print(f"Your hand is better than the dealers. You win ${bet_amount}.")
             playerOne.change_money(bet_amount)
         else:
-            print(f"Dealers hand is better. You lose ${bet_amount}")
+            print(f"Dealers hand is better. You lose ${bet_amount}.")
             playerOne.change_money(-bet_amount)
 
         gameOn = play_again()
@@ -198,6 +205,6 @@ def blackjack_game():
             playerOne.clear_hand()
             dealer.clear_hand()
         
-    print(f"Thank you for playing. Your end money total was ${playerOne.money}")
+    print(f"Thank you for playing. Your end money total was ${playerOne.money}.")
 
 blackjack_game()
