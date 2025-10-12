@@ -63,7 +63,7 @@ def blackjack_game():
         dealer.add_card(game_deck.deal_card())
         dealer.add_sec_card(game_deck.deal_card())
         
-        print(f"Your total hand score is {player_one.hand_total}")
+        print(f"\nYour total hand score is {player_one.hand_total}")
 
         player_bust = False
         # While loop used to allow the player to continuously add cards to their hand till satisfied or they bust.
@@ -77,9 +77,11 @@ def blackjack_game():
             if hit_stay == 'hit':
                 player_one.add_card(game_deck.deal_card())
 
+            player_one.check_aces()
             player_bust = player_one.check_bust()
 
-        print(f"Dealer's total hand score is {dealer.hand_total}.")
+        if not player_bust:
+            print(f"\nDealer's total hand score is {dealer.hand_total}.")
         
         dealer_bust = False
         # While loop used to make the dealer reveal their second card then they hit till they hit 17 or bust.
@@ -95,6 +97,7 @@ def blackjack_game():
                 print(f"Dealer decides to stay.")
                 break
             
+            dealer.check_aces()
             dealer_bust = dealer.check_bust()
 
         # if and elif statements to determine the winner
@@ -105,8 +108,7 @@ def blackjack_game():
             print(f"Dealer went bust so you win. You win ${bet_amount}.")
             player_one.change_money(bet_amount)
         elif player_one.hand_total == dealer.hand_total:
-            print(f"You and the dealer have equal value hands so the dealer wins. You lose ${bet_amount}.")
-            player_one.change_money(-bet_amount)
+            print(f"You and the dealer have equal value hands so it is a push. Nobody wins or loses.")
         elif player_one.hand_total > dealer.hand_total:
             print(f"Your hand is better than the dealers. You win ${bet_amount}.")
             player_one.change_money(bet_amount)
