@@ -1,4 +1,4 @@
-# Player class object with methods for adding cards checking if the players hand has busted change their money amount and clear their hand.
+# Player class object with methods for adding cards, checking if the players hand has busted and can be fixed with aces, change their money amount, and clear their hand.
 class Player:
     def __init__(self, name, money=2000):
         self.name = name

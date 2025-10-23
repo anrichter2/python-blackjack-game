@@ -1,4 +1,4 @@
-# Dealer class object with methods for adding cards to their main hand or their secret second hand, checking if their hand is bust, and clearing their hands.
+# Dealer class object with methods for adding cards to their main hand or their secret second hand, checking if their hand is bust and can be fixed with aces, and clearing their hands.
 class Dealer:
     def __init__(self):
         self.hand = []
