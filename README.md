@@ -2,7 +2,7 @@
 
 ## Description
 
-For this project the goal was to create an application that simulated playing the game blackjack using the python language. This project was part of the Udemy course The Complete Python Bootcamp From Zero to Hero in Python, and the goal of the project was to use object-oriented programming (OOP) to complete the task of making a blackjack game. In this version of the game there is one player and the dealer, the player starts with $5000 to be used to bet on each hand, and there is a house rule that the dealer will always stay with a hand score of 17 or higher. The game is visible in the terminal 
+For this project the goal was to create an application that simulated playing the game blackjack using the python language. This project was part of the Udemy course The Complete Python Bootcamp From Zero to Hero in Python, and the goal of the project was to use object-oriented programming (OOP) to complete the task of making a blackjack game. In this version of the game there is one player and the dealer, the player starts with $5000 to be used to bet on each hand, and there is a house rule that the dealer will always stay with a hand score of 17 or higher. The game is visibly displayed in the terminal.
 
 ## Installation
 
@@ -14,7 +14,7 @@ To use the application you must download the files and then open the application
 
 Below is a screenshot of the blackjack game being run in VS Code with the terminal open to show what a round would look like.
 
-![screenshot of blackjack game in the terminal]()
+![screenshot of blackjack game in the terminal](./asssets/images/Blackjack-Image.png)
 
 ## Credits
 
